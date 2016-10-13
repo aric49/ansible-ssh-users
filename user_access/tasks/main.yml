@@ -1,0 +1,44 @@
+---
+#Deploy SSH and User Accounts
+
+
+
+#Create User Accounts
+- name: Deploy User Accounts
+  user:
+    name: "{{ item.name }}"
+    skeleton: createhome
+    shell: /bin/bash
+    state: present
+  with_items:
+    - "{{ users }}"
+
+
+#TODO: Dynamically create groups on the fly!
+- name: Add Users to Admin Group
+  user:
+    name: "{{ item.name }}"
+    groups: sudo
+    append: true
+  when: item.admin == true
+  with_items:
+    - "{{ users }}"
+
+#
+#Remove Expired User Accounts
+- name: Delete Old User Accounts
+  user:
+    name: "{{ item.name }}"
+    skeleton: createhome
+    shell: /bin/bash
+    state: absent
+  with_items:
+    - "{{ old_users }}"
+
+
+- name: Deploy SSH Keys
+  authorized_key:
+    user: "{{ item.name }}"
+    key: " {{ item.ssh_key }}"
+  with_items:
+    - "{{ users }}"

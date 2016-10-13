@@ -1,15 +1,19 @@
 ---
-# Overwrite these variables!!!!
+# Overwrite these variables.  Used to demonstrate the default parameters
+#Store the SSH keys in the files/ directory.
 
 users:
   - name: "user1"
     ssh_key: "{{ lookup('file', 'user1.pub') }}"
+    admin: true
+
   - name: "user2"
     ssh_key: "{{ lookup('file', 'user2.pub') }}"
+
   - name: "user3"
     ssh_key: "{{ lookup('file', 'user3.pub') }}"
 
 
-
+#users listed here will be deleted! 
 old_users:
   - name: "user4"
